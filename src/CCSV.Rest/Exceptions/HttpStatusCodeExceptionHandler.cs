@@ -26,51 +26,51 @@ public class HttpStatusCodeExceptionHandler
         }
         catch (InvalidValueException ex)
         {
-            await ReportException(context, ex, StatusCodes.Status400BadRequest);
+            await ReportInformation(context, ex, StatusCodes.Status400BadRequest);
         }
         catch (NotAllowedOperationException ex)
         {
-            await ReportException(context, ex, StatusCodes.Status400BadRequest);
+            await ReportInformation(context, ex, StatusCodes.Status400BadRequest);
         }
         catch (WrongOperationException ex)
         {
-            await ReportException(context, ex, StatusCodes.Status400BadRequest);
+            await ReportInformation(context, ex, StatusCodes.Status400BadRequest);
         }
         catch (DuplicatedValueException ex)
         {
-            await ReportException(context, ex, StatusCodes.Status400BadRequest);
+            await ReportInformation(context, ex, StatusCodes.Status400BadRequest);
         }
         catch (ValueNotFoundException ex)
         {
-            await ReportException(context, ex, StatusCodes.Status404NotFound);
+            await ReportInformation(context, ex, StatusCodes.Status404NotFound);
         }
         catch (BadGatewayException ex)
         {
-            await ReportException(context, ex, StatusCodes.Status502BadGateway);
-        }
-        catch (BusinessException ex)
-        {
-            await ReportException(context, ex, StatusCodes.Status500InternalServerError);
+            await ReportWarning(context, ex, StatusCodes.Status502BadGateway);
         }
         catch (EntityUpdateConcurrencyException ex)
         {
-            await ReportException(context, ex, StatusCodes.Status409Conflict);
+            await ReportWarning(context, ex, StatusCodes.Status409Conflict);
+        }
+        catch (BusinessException ex)
+        {
+            await ReportError(context, ex, StatusCodes.Status500InternalServerError);
         }
         catch (InternalRepositoryException ex)
         {
-            await ReportException(context, ex, StatusCodes.Status500InternalServerError);
+            await ReportError(context, ex, StatusCodes.Status500InternalServerError);
         }
         catch (DomainException ex)
         {
-            await ReportException(context, ex, StatusCodes.Status500InternalServerError);
+            await ReportError(context, ex, StatusCodes.Status500InternalServerError);
         }
         catch (Exception ex)
         {
-            await ReportException(context, ex, StatusCodes.Status500InternalServerError);
+            await ReportCritical(context, ex, StatusCodes.Status500InternalServerError);
         }
     }
 
-    private async Task ReportException(HttpContext context, Exception ex, int status)
+    private async Task ReportInformation(HttpContext context, Exception ex, int status)
     {
         ProblemDetails problemDetail = CreateProblemDetails(ex, status);
 
@@ -78,6 +78,29 @@ public class HttpStatusCodeExceptionHandler
         await SendHttpStatusCode(context, problemDetail);
     }
 
+    private async Task ReportWarning(HttpContext context, Exception ex, int status)
+    {
+        ProblemDetails problemDetail = CreateProblemDetails(ex, status);
+
+        _logger.LogWarning(ex, ex.Message);
+        await SendHttpStatusCode(context, problemDetail);
+    }
+
+    private async Task ReportError(HttpContext context, Exception ex, int status)
+    {
+        ProblemDetails problemDetail = CreateProblemDetails(ex, status);
+
+        _logger.LogError(ex, ex.Message);
+        await SendHttpStatusCode(context, problemDetail);
+    }
+
+    private async Task ReportCritical(HttpContext context, Exception ex, int status)
+    {
+        ProblemDetails problemDetail = CreateProblemDetails(ex, status);
+
+        _logger.LogCritical(ex, ex.Message);
+        await SendHttpStatusCode(context, problemDetail);
+    }
 
     private async Task SendHttpStatusCode(HttpContext context, ProblemDetails problemDetail)
     {
