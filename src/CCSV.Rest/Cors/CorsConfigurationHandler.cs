@@ -6,7 +6,7 @@ namespace CCSV.Rest.Cors;
 
 public static class CorsConfigurationHandler
 {
-    public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection Configure(IServiceCollection services, IConfiguration configuration)
     {
         CorsConfiguration? corsConfiguration = configuration.GetSection("Cors").Get<CorsConfiguration>();
         CorsPolicyBuilder policyBuilder = new CorsPolicyBuilder();

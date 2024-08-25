@@ -4,12 +4,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>CCSV.Rest</PackageId>
-    <Version>8.0.3</Version>
+    <Version>8.0.4</Version>
     <Authors>Stefano Vidaurre</Authors>
     <Company>CCSV</Company>
     <Title>CCSV.Rest</Title>
     <Description>A simple set of common REST API classes.</Description>
-    <PackageTags>CCSV;Rest;</PackageTags>
+    <PackageTags>CCSV;Rest;API;</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/stefano-vidaurre/ccsv-rest</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
