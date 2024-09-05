@@ -38,6 +38,8 @@ public class MasterValidator : IMasterValidator
             Type genericArgumentType = baseType.GetGenericArguments()[0];
 
             _validators.Add(genericArgumentType, validator);
+
+            ValidatorOptions.Global.LanguageManager.Enabled = false;
         }
     }
 
