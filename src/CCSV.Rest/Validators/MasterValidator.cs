@@ -1,5 +1,3 @@
-using FluentValidation;
-using FluentValidation.Results;
 using CCSV.Domain.Exceptions;
 using System.Reflection;
 
@@ -7,7 +5,7 @@ namespace CCSV.Rest.Validators;
 
 public class MasterValidator : IMasterValidator
 {
-    IDictionary<Type, Type> _validators;
+    private readonly IDictionary<Type, Type> _validators;
 
     public MasterValidator(params Type[] validators) : this(validators.AsEnumerable())
     {
@@ -38,8 +36,6 @@ public class MasterValidator : IMasterValidator
             Type genericArgumentType = baseType.GetGenericArguments()[0];
 
             _validators.Add(genericArgumentType, validator);
-
-            ValidatorOptions.Global.LanguageManager.Enabled = false;
         }
     }
 
@@ -71,31 +67,13 @@ public class MasterValidator : IMasterValidator
             throw new BusinessException($"The type ({typeof(T).Name}) has not a validator.");
         }
 
-
         IValidator<T> validator = validatorType.GetConstructor(Type.EmptyTypes)?.Invoke(null) as IValidator<T> ?? throw new BusinessException("The validator type is not valid.");
 
         ValidationResult result = validator.Validate(instance);
 
         if (!result.IsValid)
         {
-            throw new InvalidValueException(result.Errors.Aggregate("", (acc, error) => acc + error.ErrorMessage + '\n'));
-        }
-    }
-
-    public async Task ValidateAsync<T>(T instance, CancellationToken cancellation = default)
-    {
-        if (!_validators.TryGetValue(typeof(T), out var validatorType))
-        {
-            throw new BusinessException($"The type ({typeof(T).Name}) has not a validator.");
-        }
-
-        IValidator<T> validator = validatorType.GetConstructor(Type.EmptyTypes)?.Invoke(null) as IValidator<T> ?? throw new BusinessException("The validator type is not valid.");
-
-        ValidationResult result = await validator.ValidateAsync(instance, cancellation);
-
-        if (!result.IsValid)
-        {
-            throw new InvalidValueException(result.Errors.Aggregate("", (acc, error) => acc + error.ErrorMessage + '\n'));
+            throw new InvalidValueException(result.PrintErrors());
         }
     }
 }
