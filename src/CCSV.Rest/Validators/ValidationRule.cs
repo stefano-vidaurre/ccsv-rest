@@ -20,6 +20,16 @@ public class ValidationRule<T,U> : IValidationRule<T>
         return this;
     }
 
+    public ValidationRule<T,U> NotEmpty() {
+        _components.Add(new ValidationRuleComponent<U>(value => !string.IsNullOrEmpty(value == null ? null : value.ToString())));
+        return this;
+    }
+
+    public ValidationRule<T,U> NotWhiteSpace() {
+        _components.Add(new ValidationRuleComponent<U>(value => !string.IsNullOrWhiteSpace(value == null ? null : value.ToString())));
+        return this;
+    }
+
     public ValidationRule<T,U> Check(Expression<Func<U, bool>> expression) {
         _components.Add(new ValidationRuleComponent<U>(expression));
         return this;
