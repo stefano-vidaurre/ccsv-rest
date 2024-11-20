@@ -2,23 +2,23 @@ namespace CCSV.Rest.Validators;
 
 public class ValidationResult
 {
-    private readonly IEnumerable<string> _errors;
-    public bool IsValid => !_errors.Any();
+    private readonly IEnumerable<ValidationRuleResult> _results;
+    public bool IsValid => _results.All(result => result.IsValid);
 
-    public IEnumerable<string> Errors => _errors.AsEnumerable();
+    public IEnumerable<string> Errors => _results.Select(result => result.PrintErrors());
 
     public ValidationResult()
     {
-        _errors = new List<string>();
+        _results = new List<ValidationRuleResult>();
     }
 
-    public ValidationResult(IEnumerable<string> errors)
+    public ValidationResult(IEnumerable<ValidationRuleResult> results)
     {
-        _errors = errors.AsEnumerable();
+        _results = results.AsEnumerable();
     }
 
     public string PrintErrors()
     {
-        return _errors.Aggregate("", (acc, error) => acc + error + '\n');
+        return _results.Aggregate("", (acc, error) => acc + error.PrintErrors() + '\n');
     }
 }

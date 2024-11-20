@@ -64,7 +64,7 @@ public class MasterValidator : IMasterValidator
     {
         if (!_validators.TryGetValue(typeof(T), out var validatorType))
         {
-            throw new BusinessException($"The type ({typeof(T).Name}) has not a validator.");
+            throw new WrongOperationException($"Class ({typeof(T).Name}) has not a validator.");
         }
 
         IValidator<T> validator = validatorType.GetConstructor(Type.EmptyTypes)?.Invoke(null) as IValidator<T> ?? throw new BusinessException("The validator type is not valid.");

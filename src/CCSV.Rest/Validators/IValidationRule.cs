@@ -4,5 +4,5 @@ public interface IValidationRule<in T>
 {
     string ErrorMessage { get; }
 
-    bool Validate(T instance);
+    ValidationRuleResult Validate(T instance);
 }

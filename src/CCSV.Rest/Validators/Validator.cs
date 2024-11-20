@@ -25,8 +25,7 @@ public abstract class Validator<T> : IValidator<T>
 
     public ValidationResult Validate(T instance)
     {
-        IEnumerable<IValidationRule<T>> failedRules = _rules.Where(rule => !rule.Validate(instance));
-        ValidationResult result = new ValidationResult(failedRules.Select(rule => rule.ErrorMessage));
-        return result;
+        IEnumerable<ValidationRuleResult> validationResults = _rules.Select(rule => rule.Validate(instance));
+        return new ValidationResult(validationResults);
     }
 }
