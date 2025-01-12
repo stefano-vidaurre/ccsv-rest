@@ -28,10 +28,6 @@ public class HttpStatusCodeExceptionHandler
         {
             await ReportInformation(context, ex, StatusCodes.Status400BadRequest);
         }
-        catch (NotAllowedOperationException ex)
-        {
-            await ReportInformation(context, ex, StatusCodes.Status400BadRequest);
-        }
         catch (WrongOperationException ex)
         {
             await ReportInformation(context, ex, StatusCodes.Status400BadRequest);
