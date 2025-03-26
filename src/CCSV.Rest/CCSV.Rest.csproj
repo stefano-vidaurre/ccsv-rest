@@ -19,6 +19,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CCSV.Data.EFCore" Version="9.0.2" />
     <PackageReference Include="CCSV.Domain" Version="9.0.1" />
   </ItemGroup>
   <ItemGroup>
