@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>CCSV.Rest</PackageId>
-    <Version>9.0.6</Version>
+    <Version>9.0.7</Version>
     <Authors>Stefano Vidaurre</Authors>
     <Company>CCSV</Company>
     <Title>CCSV.Rest</Title>
