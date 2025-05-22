@@ -4,6 +4,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CCSV.Rest.Controllers;
 
+public abstract class RestController<TRead, TCreate, TUpdate, TQuery, TFilter> : RestController<TRead, TCreate, TQuery, TFilter>
+    where TRead : EntityReadDto
+    where TCreate : EntityCreateDto
+    where TUpdate : EntityUpdateDto
+    where TQuery : EntityQueryDto
+    where TFilter : EntityFilterDto
+{
+    private readonly IEntityAppService<TRead, TCreate, TUpdate, TQuery, TFilter> _service;
+
+    protected RestController(IEntityAppService<TRead, TCreate, TUpdate, TQuery, TFilter> service) : base(service)
+    {
+        _service = service;
+    }
+
+    [HttpPut("{id}")]
+    public Task Update(Guid id, [FromBody] TUpdate data)
+    {
+        return _service.Update(id, data);
+    }
+}
+
 [ApiController]
 public abstract class RestController<TRead, TCreate, TQuery, TFilter> : ControllerBase
     where TRead : EntityReadDto
