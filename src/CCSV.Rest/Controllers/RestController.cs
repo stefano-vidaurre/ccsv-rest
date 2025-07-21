@@ -25,8 +25,7 @@ public abstract class RestController<TRead, TCreate, TUpdate, TQuery, TFilter> :
     }
 }
 
-[ApiController]
-public abstract class RestController<TRead, TCreate, TQuery, TFilter> : ControllerBase
+public abstract class RestController<TRead, TCreate, TQuery, TFilter> : RestController<TRead, TQuery, TFilter>
     where TRead : EntityReadDto
     where TCreate : EntityCreateDto
     where TQuery : EntityQueryDto
@@ -34,7 +33,27 @@ public abstract class RestController<TRead, TCreate, TQuery, TFilter> : Controll
 {
     private readonly IEntityAppService<TRead, TCreate, TQuery, TFilter> _service;
 
-    protected RestController(IEntityAppService<TRead, TCreate, TQuery, TFilter> service)
+    protected RestController(IEntityAppService<TRead, TCreate, TQuery, TFilter> service) : base(service)
+    {
+        _service = service;
+    }
+
+    [HttpPost]
+    public Task Create([FromBody] TCreate data)
+    {
+        return _service.Create(data);
+    }
+}
+
+[ApiController]
+public abstract class RestController<TRead, TQuery, TFilter> : ControllerBase
+    where TRead : EntityReadDto
+    where TQuery : EntityQueryDto
+    where TFilter : EntityFilterDto
+{
+    private readonly IEntityAppService<TRead, TQuery, TFilter> _service;
+
+    protected RestController(IEntityAppService<TRead, TQuery, TFilter> service)
     {
         _service = service;
     }
@@ -55,12 +74,6 @@ public abstract class RestController<TRead, TCreate, TQuery, TFilter> : Controll
     public Task<int> GetLength([FromQuery] TFilter filter)
     {
         return _service.GetLength(filter);
-    }
-
-    [HttpPost]
-    public Task Create([FromBody] TCreate data)
-    {
-        return _service.Create(data);
     }
 
     [HttpDelete("{id}")]
